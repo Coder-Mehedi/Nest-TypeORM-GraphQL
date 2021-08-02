@@ -11,11 +11,19 @@ export class UsersService {
   }
 
   async findAll() {
-    return await User.find();
+    try {
+      return await User.find({ relations: ['posts'] });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async findOne(id: string) {
-    return await User.findOne({ id });
+    try {
+      return await User.findOne({ id });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   update(id: number, updateUserInput: UpdateUserInput) {

@@ -1,15 +1,30 @@
 import { Injectable } from '@nestjs/common';
+import { User } from 'src/users/entities/user.entity';
 import { CreatePostInput } from './dto/create-post.input';
 import { UpdatePostInput } from './dto/update-post.input';
+import { Post } from './entities/post.entity';
 
 @Injectable()
 export class PostsService {
-  create(createPostInput: CreatePostInput) {
-    return 'This action adds a new post';
+  async create(createPostInput: CreatePostInput) {
+    try {
+      const user = await User.findOneOrFail({
+        where: { id: createPostInput.userId },
+      });
+      const post = Post.create({ ...createPostInput, user });
+      console.log(user);
+      return await post.save();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  findAll() {
-    return `This action returns all posts`;
+  async findAll() {
+    try {
+      return await Post.find({ relations: ['user'] });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   findOne(id: number) {

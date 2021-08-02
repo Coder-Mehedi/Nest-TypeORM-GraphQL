@@ -3,14 +3,14 @@
 # ------------------------------------------------------
 
 input CreatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  content: String!
+  userId: String!
 }
 
 input CreateUserInput {
   email: String!
   name: String!
-  role: String!
+  role: UserRole
 }
 
 type Mutation {
@@ -26,6 +26,7 @@ type Post {
   content: String!
   id: String!
   isPublished: Boolean!
+  user: User!
 }
 
 type Query {
@@ -36,16 +37,16 @@ type Query {
 }
 
 input UpdatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  content: String
   id: Int!
+  userId: String
 }
 
 input UpdateUserInput {
   email: String
   id: Int!
   name: String
-  role: String
+  role: UserRole
 }
 
 type User {
@@ -54,5 +55,10 @@ type User {
   isActive: Boolean!
   name: String!
   posts: [Post!]
-  role: String!
+  role: UserRole
+}
+
+enum UserRole {
+  Admin
+  User
 }

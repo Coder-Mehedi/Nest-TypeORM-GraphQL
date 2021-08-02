@@ -23,6 +23,7 @@ export class Post extends BaseEntity {
   @Column({ default: true })
   isPublished: boolean;
 
+  @Field(() => User)
   @ManyToOne(() => User)
   user: User;
 }

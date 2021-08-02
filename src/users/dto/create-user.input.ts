@@ -1,5 +1,5 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
-import { User } from '../entities/user.entity';
+import { User, UserRole } from '../entities/user.entity';
 
 @InputType()
 export class CreateUserInput {
@@ -9,6 +9,6 @@ export class CreateUserInput {
   @Field()
   email: string;
 
-  @Field()
-  role: string;
+  @Field(() => UserRole, { nullable: true })
+  role: UserRole;
 }
