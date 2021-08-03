@@ -21,7 +21,7 @@ export class PostsService {
 
   async findAll() {
     try {
-      return await Post.find({ relations: ['user'] });
+      return await Post.find({ relations: ['user', 'likes'] });
     } catch (error) {
       console.log(error);
     }

@@ -14,11 +14,6 @@ input CreateCommentInput {
   exampleField: Int!
 }
 
-input CreateLikeInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 input CreatePostInput {
   content: String!
   userId: String!
@@ -31,15 +26,21 @@ input CreateUserInput {
 }
 
 type Like {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: String
+  post: Post
+  user: User
+}
+
+input LikeAPostInput {
+  postId: String!
+  userId: String!
 }
 
 type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
-  createLike(createLikeInput: CreateLikeInput!): Like!
   createPost(createPostInput: CreatePostInput!): Post!
   createUser(createUserInput: CreateUserInput!): User!
+  likeAPost(likeAPostInput: LikeAPostInput): Like!
   removeComment(id: Int!): Comment!
   removeLike(id: Int!): Like!
   removePost(id: Int!): Post!
@@ -51,9 +52,11 @@ type Mutation {
 }
 
 type Post {
+  comments: [Comment!]
   content: String!
   id: String!
   isPublished: Boolean!
+  likes: [Like!]
   user: User!
 }
 
@@ -75,9 +78,9 @@ input UpdateCommentInput {
 }
 
 input UpdateLikeInput {
-  """Example field (placeholder)"""
-  exampleField: Int
   id: Int!
+  postId: String
+  userId: String
 }
 
 input UpdatePostInput {
@@ -94,9 +97,11 @@ input UpdateUserInput {
 }
 
 type User {
+  comments: [Comment!]
   email: String!
   id: String!
   isActive: Boolean!
+  likes: [Like!]
   name: String!
   posts: [Post!]
   role: UserRole
