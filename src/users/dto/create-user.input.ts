@@ -9,6 +9,9 @@ export class CreateUserInput {
   @Field()
   email: string;
 
+  @Field()
+  password: string;
+
   @Field(() => UserRole, { nullable: true })
   role: UserRole;
 }

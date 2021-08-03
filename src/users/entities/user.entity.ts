@@ -31,6 +31,10 @@ export class User extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
+  @Field()
+  @Column({ unique: true })
+  password: string;
+
   @Field(() => UserRole, { nullable: true })
   @Column({ type: 'enum', enum: UserRole, default: UserRole.User })
   role: UserRole;

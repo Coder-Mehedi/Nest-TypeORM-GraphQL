@@ -2,6 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AccessToken {
+  access_token: String!
+}
+
 type Comment {
   author: User!
   content: String!
@@ -23,6 +27,7 @@ input CreatePostInput {
 input CreateUserInput {
   email: String!
   name: String!
+  password: String!
   role: UserRole
 }
 
@@ -37,12 +42,18 @@ input LikeAPostInput {
   userId: String!
 }
 
+input LoginInput {
+  email: String!
+  password: String!
+}
+
 type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
   createPost(createPostInput: CreatePostInput!): Post!
-  createUser(createUserInput: CreateUserInput!): User!
   likeAPost(likeAPostInput: LikeAPostInput!): Like!
+  login(loginInput: LoginInput!): AccessToken!
   publishPost(id: String!): String!
+  registerUser(createUserInput: CreateUserInput!): User!
   removeComment(id: String!): String!
   removeLike(id: Int!): Like!
   removePost(id: String!): String!
@@ -71,6 +82,7 @@ type Query {
   posts: [Post!]!
   user(id: String!): User!
   users: [User!]!
+  whoAmI: User!
 }
 
 input UpdateCommentInput {
@@ -96,6 +108,7 @@ input UpdateUserInput {
   email: String
   id: Int!
   name: String
+  password: String
   role: UserRole
 }
 
@@ -106,6 +119,7 @@ type User {
   isActive: Boolean!
   likes: [Like!]
   name: String!
+  password: String!
   posts: [Post!]
   role: UserRole
 }

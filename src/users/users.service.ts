@@ -26,6 +26,14 @@ export class UsersService {
     }
   }
 
+  async findOneByEmail(id: string) {
+    try {
+      return await User.findOne({ email: id }, { relations: ['posts'] });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   update(id: number, updateUserInput: UpdateUserInput) {
     return `This action updates a #${id} user`;
   }
