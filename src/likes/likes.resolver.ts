@@ -11,8 +11,6 @@ import { LikesService } from './likes.service';
 import { Like } from './entities/like.entity';
 import { LikeAPostInput } from './dto/like-a-post.input';
 import { UpdateLikeInput } from './dto/update-like.input';
-import { User } from 'src/users/entities/user.entity';
-import { Post } from 'src/posts/entities/post.entity';
 
 @Resolver(() => Like)
 export class LikesResolver {

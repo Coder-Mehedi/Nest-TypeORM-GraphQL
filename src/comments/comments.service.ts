@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Post } from 'src/posts/entities/post.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Post } from 'posts/entities/post.entity';
+import { User } from 'users/entities/user.entity';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { UpdateCommentInput } from './dto/update-comment.input';
 import { Comment } from './entities/comment.entity';
