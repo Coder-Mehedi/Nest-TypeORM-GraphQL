@@ -16,20 +16,21 @@ export class LikesService {
       const isFound = await Like.findOne({ where: { post, user } });
 
       // if (isFound) return { id: isFound.id, post, user };
-      if (isFound) {
-        return await Like.remove(isFound);
-      }
+      if (isFound) return await Like.remove(isFound);
 
       const like = Like.create({ post, user });
       return await like.save();
     } catch (error) {
       console.log(error);
     }
-    return 'This action adds a new like';
   }
 
-  findAll() {
-    return `This action returns all likes`;
+  async findAll() {
+    try {
+      return await Like.find({ relations: ['user'] });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   findOne(id: number) {

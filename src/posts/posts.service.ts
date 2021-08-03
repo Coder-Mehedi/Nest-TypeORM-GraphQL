@@ -12,7 +12,6 @@ export class PostsService {
         where: { id: createPostInput.userId },
       });
       const post = Post.create({ ...createPostInput, user });
-      console.log(user);
       return await post.save();
     } catch (error) {
       console.log(error);
@@ -21,21 +20,74 @@ export class PostsService {
 
   async findAll() {
     try {
-      return await Post.find({ relations: ['user', 'likes'] });
+      return await Post.find({ relations: ['user', 'likes', 'comments'] });
     } catch (error) {
       console.log(error);
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: string) {
+    try {
+      return await Post.findOne(
+        { id },
+        { relations: ['user', 'likes', 'comments'] },
+      );
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  update(id: number, updatePostInput: UpdatePostInput) {
-    return `This action updates a #${id} post`;
+  async update(updatePostInput: UpdatePostInput) {
+    try {
+      const post = await Post.findOneOrFail(updatePostInput.id, {
+        relations: ['user'],
+      });
+      const user = await User.findOneOrFail({
+        where: { id: updatePostInput.userId },
+      });
+      if (post.user.id === user.id) {
+        post.content = updatePostInput.content;
+        return post.save();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: string) {
+    try {
+      const post = await Post.findOneOrFail(id);
+      await Post.remove(post);
+      return 'Post Deleted';
+    } catch (error) {
+      throw new Error('Post not found');
+    }
+  }
+
+  async publish(id: string) {
+    try {
+      const post = await Post.findOneOrFail(id, {
+        relations: ['user'],
+      });
+      if (post.isPublished) throw new Error('Post Was Already Published');
+      post.isPublished = true;
+      await post.save();
+      return 'Post Published';
+    } catch (error) {
+      return error;
+    }
+  }
+  async unpublish(id: string) {
+    try {
+      const post = await Post.findOneOrFail(id, {
+        relations: ['user'],
+      });
+      if (!post.isPublished) throw new Error('Post not yet published');
+      post.isPublished = false;
+      await post.save();
+      return 'Post Unpublished';
+    } catch (error) {
+      return error;
+    }
   }
 }

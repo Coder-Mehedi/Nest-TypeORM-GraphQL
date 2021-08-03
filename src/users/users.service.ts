@@ -20,7 +20,7 @@ export class UsersService {
 
   async findOne(id: string) {
     try {
-      return await User.findOne({ id });
+      return await User.findOne({ id }, { relations: ['posts'] });
     } catch (error) {
       console.log(error);
     }

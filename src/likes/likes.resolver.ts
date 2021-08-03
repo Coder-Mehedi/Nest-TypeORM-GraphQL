@@ -1,17 +1,25 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  Parent,
+  ResolveField,
+} from '@nestjs/graphql';
 import { LikesService } from './likes.service';
 import { Like } from './entities/like.entity';
 import { LikeAPostInput } from './dto/like-a-post.input';
 import { UpdateLikeInput } from './dto/update-like.input';
+import { User } from 'src/users/entities/user.entity';
+import { Post } from 'src/posts/entities/post.entity';
 
 @Resolver(() => Like)
 export class LikesResolver {
   constructor(private readonly likesService: LikesService) {}
 
   @Mutation(() => Like)
-  likeAPost(
-    @Args('likeAPostInput', { nullable: true }) likeAPostInput: LikeAPostInput,
-  ) {
+  likeAPost(@Args('likeAPostInput') likeAPostInput: LikeAPostInput) {
     return this.likesService.likeAPost(likeAPostInput);
   }
 
@@ -34,4 +42,12 @@ export class LikesResolver {
   removeLike(@Args('id', { type: () => Int }) id: number) {
     return this.likesService.remove(id);
   }
+
+  //   @ResolveField('user', (returns) => [User])
+  //   async user(@Parent() like: Like) {
+  //     const { id } = like;
+  //     const res = await this.likesService.findAll({ id });
+  //     console.log(res);
+  //     return res;
+  //   }
 }

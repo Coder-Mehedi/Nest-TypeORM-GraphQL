@@ -9,27 +9,26 @@ export class CommentsResolver {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Mutation(() => Comment)
-  createComment(@Args('createCommentInput') createCommentInput: CreateCommentInput) {
+  createComment(
+    @Args('createCommentInput') createCommentInput: CreateCommentInput,
+  ) {
     return this.commentsService.create(createCommentInput);
   }
 
   @Query(() => [Comment], { name: 'comments' })
-  findAll() {
-    return this.commentsService.findAll();
-  }
-
-  @Query(() => Comment, { name: 'comment' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.commentsService.findOne(id);
+  findAll(@Args('postId') postId: string) {
+    return this.commentsService.findAll(postId);
   }
 
   @Mutation(() => Comment)
-  updateComment(@Args('updateCommentInput') updateCommentInput: UpdateCommentInput) {
-    return this.commentsService.update(updateCommentInput.id, updateCommentInput);
+  updateComment(
+    @Args('updateCommentInput') updateCommentInput: UpdateCommentInput,
+  ) {
+    return this.commentsService.update(updateCommentInput);
   }
 
-  @Mutation(() => Comment)
-  removeComment(@Args('id', { type: () => Int }) id: number) {
+  @Mutation(() => String)
+  removeComment(@Args('id') id: string) {
     return this.commentsService.remove(id);
   }
 }

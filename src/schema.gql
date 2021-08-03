@@ -10,8 +10,9 @@ type Comment {
 }
 
 input CreateCommentInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  content: String!
+  postId: String!
+  userId: String!
 }
 
 input CreatePostInput {
@@ -40,11 +41,13 @@ type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
   createPost(createPostInput: CreatePostInput!): Post!
   createUser(createUserInput: CreateUserInput!): User!
-  likeAPost(likeAPostInput: LikeAPostInput): Like!
-  removeComment(id: Int!): Comment!
+  likeAPost(likeAPostInput: LikeAPostInput!): Like!
+  publishPost(id: String!): String!
+  removeComment(id: String!): String!
   removeLike(id: Int!): Like!
-  removePost(id: Int!): Post!
+  removePost(id: String!): String!
   removeUser(id: Int!): User!
+  unpublishPost(id: String!): String!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   updateLike(updateLikeInput: UpdateLikeInput!): Like!
   updatePost(updatePostInput: UpdatePostInput!): Post!
@@ -61,20 +64,20 @@ type Post {
 }
 
 type Query {
-  comment(id: Int!): Comment!
-  comments: [Comment!]!
+  comments(postId: String!): [Comment!]!
   like(id: Int!): Like!
   likes: [Like!]!
-  post(id: Int!): Post!
+  post(id: String!): Post!
   posts: [Post!]!
   user(id: String!): User!
   users: [User!]!
 }
 
 input UpdateCommentInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  content: String!
+  id: String!
+  postId: String
+  userId: String
 }
 
 input UpdateLikeInput {
@@ -84,9 +87,9 @@ input UpdateLikeInput {
 }
 
 input UpdatePostInput {
-  content: String
-  id: Int!
-  userId: String
+  content: String!
+  id: String!
+  userId: String!
 }
 
 input UpdateUserInput {

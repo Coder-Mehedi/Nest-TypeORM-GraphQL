@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { PostsService } from './posts.service';
 import { Post } from './entities/post.entity';
 import { CreatePostInput } from './dto/create-post.input';
@@ -19,17 +19,27 @@ export class PostsResolver {
   }
 
   @Query(() => Post, { name: 'post' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
+  findOne(@Args('id') id: string) {
     return this.postsService.findOne(id);
   }
 
   @Mutation(() => Post)
   updatePost(@Args('updatePostInput') updatePostInput: UpdatePostInput) {
-    return this.postsService.update(updatePostInput.id, updatePostInput);
+    return this.postsService.update(updatePostInput);
   }
 
-  @Mutation(() => Post)
-  removePost(@Args('id', { type: () => Int }) id: number) {
+  @Mutation(() => String)
+  removePost(@Args('id') id: string) {
     return this.postsService.remove(id);
+  }
+
+  @Mutation(() => String)
+  publishPost(@Args('id') id: string) {
+    return this.postsService.publish(id);
+  }
+
+  @Mutation(() => String)
+  unpublishPost(@Args('id') id: string) {
+    return this.postsService.unpublish(id);
   }
 }
