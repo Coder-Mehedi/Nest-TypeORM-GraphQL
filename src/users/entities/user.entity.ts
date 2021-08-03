@@ -1,4 +1,6 @@
 import { ObjectType, Field, registerEnumType } from '@nestjs/graphql';
+import { Comment } from 'src/comments/entities/comment.entity';
+import { Like } from 'src/likes/entities/like.entity';
 import { Post } from 'src/posts/entities/post.entity';
 import {
   BaseEntity,
@@ -40,4 +42,12 @@ export class User extends BaseEntity {
   @Field(() => [Post], { nullable: true })
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  @Field(() => [Comment], { nullable: true })
+  @OneToMany(() => Comment, (comment) => comment.author)
+  comments: Comment[];
+
+  @Field(() => [Like], { nullable: true })
+  @OneToMany(() => Like, (like) => like.user)
+  likes: Comment[];
 }

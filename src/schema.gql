@@ -2,6 +2,23 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Comment {
+  author: User!
+  content: String!
+  id: String!
+  post: Post!
+}
+
+input CreateCommentInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateLikeInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 input CreatePostInput {
   content: String!
   userId: String!
@@ -13,11 +30,22 @@ input CreateUserInput {
   role: UserRole
 }
 
+type Like {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Mutation {
+  createComment(createCommentInput: CreateCommentInput!): Comment!
+  createLike(createLikeInput: CreateLikeInput!): Like!
   createPost(createPostInput: CreatePostInput!): Post!
   createUser(createUserInput: CreateUserInput!): User!
+  removeComment(id: Int!): Comment!
+  removeLike(id: Int!): Like!
   removePost(id: Int!): Post!
   removeUser(id: Int!): User!
+  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
+  updateLike(updateLikeInput: UpdateLikeInput!): Like!
   updatePost(updatePostInput: UpdatePostInput!): Post!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
@@ -30,10 +58,26 @@ type Post {
 }
 
 type Query {
+  comment(id: Int!): Comment!
+  comments: [Comment!]!
+  like(id: Int!): Like!
+  likes: [Like!]!
   post(id: Int!): Post!
   posts: [Post!]!
   user(id: String!): User!
   users: [User!]!
+}
+
+input UpdateCommentInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateLikeInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
 
 input UpdatePostInput {
