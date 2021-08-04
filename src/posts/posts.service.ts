@@ -6,10 +6,10 @@ import { Post } from './entities/post.entity';
 
 @Injectable()
 export class PostsService {
-  async create(createPostInput: CreatePostInput) {
+  async create(reqUser: User, createPostInput: CreatePostInput) {
     try {
       const user = await User.findOneOrFail({
-        where: { id: createPostInput.userId },
+        where: { id: reqUser.id },
       });
       const post = Post.create({ ...createPostInput, user });
       return await post.save();
@@ -37,18 +37,13 @@ export class PostsService {
     }
   }
 
-  async update(updatePostInput: UpdatePostInput) {
+  async update(reqUser: User, id: string, updatePostInput: UpdatePostInput) {
     try {
-      const post = await Post.findOneOrFail(updatePostInput.id, {
+      const post = await Post.findOneOrFail(id, {
         relations: ['user'],
       });
-      const user = await User.findOneOrFail({
-        where: { id: updatePostInput.userId },
-      });
-      if (post.user.id === user.id) {
-        post.content = updatePostInput.content;
-        return post.save();
-      }
+      post.content = updatePostInput.content;
+      return post.save();
     } catch (error) {
       console.log(error);
     }
@@ -60,7 +55,7 @@ export class PostsService {
       await Post.remove(post);
       return 'Post Deleted';
     } catch (error) {
-      throw new Error('Post not found');
+      return error;
     }
   }
 
@@ -77,12 +72,13 @@ export class PostsService {
       return error;
     }
   }
-  async unpublish(id: string) {
+  async unpublish(reqUser: User, id: string) {
     try {
       const post = await Post.findOneOrFail(id, {
         relations: ['user'],
       });
       if (!post.isPublished) throw new Error('Post not yet published');
+
       post.isPublished = false;
       await post.save();
       return 'Post Unpublished';

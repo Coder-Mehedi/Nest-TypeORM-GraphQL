@@ -7,15 +7,17 @@ import { Comment } from './entities/comment.entity';
 
 @Injectable()
 export class CommentsService {
-  async create(createCommentInput: CreateCommentInput) {
-    const { content, postId, userId } = createCommentInput;
+  async create(reqUser: User, createCommentInput: CreateCommentInput) {
+    const { content, postId } = createCommentInput;
     try {
       const post = await Post.findOneOrFail(postId);
-      const author = await User.findOneOrFail(userId);
+      if (!post.isPublished) throw new Error('Post not published');
+      const author = await User.findOneOrFail(reqUser.id);
       const comment = Comment.create({ content, post, author });
       return await comment.save();
-    } catch (error) {}
-    return 'This action adds a new comment';
+    } catch (error) {
+      return error;
+    }
   }
 
   async findAll(postId: string) {

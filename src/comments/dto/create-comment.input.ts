@@ -7,7 +7,4 @@ export class CreateCommentInput {
 
   @Field()
   postId: string;
-
-  @Field()
-  userId: string;
 }

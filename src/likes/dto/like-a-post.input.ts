@@ -4,7 +4,4 @@ import { InputType, Int, Field } from '@nestjs/graphql';
 export class LikeAPostInput {
   @Field()
   postId: string;
-
-  @Field()
-  userId: string;
 }

@@ -16,12 +16,10 @@ type Comment {
 input CreateCommentInput {
   content: String!
   postId: String!
-  userId: String!
 }
 
 input CreatePostInput {
   content: String!
-  userId: String!
 }
 
 input CreateUserInput {
@@ -37,11 +35,6 @@ type Like {
   user: User
 }
 
-input LikeAPostInput {
-  postId: String!
-  userId: String!
-}
-
 input LoginInput {
   email: String!
   password: String!
@@ -50,18 +43,16 @@ input LoginInput {
 type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
   createPost(createPostInput: CreatePostInput!): Post!
-  likeAPost(likeAPostInput: LikeAPostInput!): Like!
+  likeAPost(postId: String!): Like!
   login(loginInput: LoginInput!): AccessToken!
   publishPost(id: String!): String!
   registerUser(createUserInput: CreateUserInput!): User!
   removeComment(id: String!): String!
-  removeLike(id: Int!): Like!
   removePost(id: String!): String!
   removeUser(id: Int!): User!
   unpublishPost(id: String!): String!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
-  updateLike(updateLikeInput: UpdateLikeInput!): Like!
-  updatePost(updatePostInput: UpdatePostInput!): Post!
+  updatePost(id: String!, updatePostInput: UpdatePostInput!): Post!
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
@@ -77,7 +68,6 @@ type Post {
 type Query {
   comments(postId: String!): [Comment!]!
   currentUser: User!
-  like(id: Int!): Like!
   likes: [Like!]!
   post(id: String!): Post!
   posts: [Post!]!
@@ -89,19 +79,10 @@ input UpdateCommentInput {
   content: String!
   id: String!
   postId: String
-  userId: String
-}
-
-input UpdateLikeInput {
-  id: Int!
-  postId: String
-  userId: String
 }
 
 input UpdatePostInput {
   content: String!
-  id: String!
-  userId: String!
 }
 
 input UpdateUserInput {

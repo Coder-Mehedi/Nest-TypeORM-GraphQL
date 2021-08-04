@@ -3,16 +3,21 @@ import { CommentsService } from './comments.service';
 import { Comment } from './entities/comment.entity';
 import { CreateCommentInput } from './dto/create-comment.input';
 import { UpdateCommentInput } from './dto/update-comment.input';
+import { CurrentUser } from 'shared/current-user.decorator';
+import { User } from 'users/entities/user.entity';
+import { Authorize } from 'auth/user.guard';
 
 @Resolver(() => Comment)
 export class CommentsResolver {
   constructor(private readonly commentsService: CommentsService) {}
 
+  @Authorize()
   @Mutation(() => Comment)
   createComment(
     @Args('createCommentInput') createCommentInput: CreateCommentInput,
+    @CurrentUser() reqUser: User,
   ) {
-    return this.commentsService.create(createCommentInput);
+    return this.commentsService.create(reqUser, createCommentInput);
   }
 
   @Query(() => [Comment], { name: 'comments' })
