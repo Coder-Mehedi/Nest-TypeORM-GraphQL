@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './entities/user.entity';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UsersService {
   async create(createUserInput: CreateUserInput) {
-    const user = User.create({ ...createUserInput });
+    const saltRounds = 10;
+    const hash = await bcrypt.hash(createUserInput.password, saltRounds);
+    const user = User.create({ ...createUserInput, password: hash });
     return await user.save();
   }
 
@@ -26,9 +28,9 @@ export class UsersService {
     }
   }
 
-  async findOneByEmail(id: string) {
+  async findOneByEmail(email: string) {
     try {
-      return await User.findOne({ email: id }, { relations: ['posts'] });
+      return await User.findOne({ email }, { relations: ['posts'] });
     } catch (error) {
       console.log(error);
     }
