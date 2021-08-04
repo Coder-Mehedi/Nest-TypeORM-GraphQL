@@ -76,13 +76,13 @@ type Post {
 
 type Query {
   comments(postId: String!): [Comment!]!
+  currentUser: User!
   like(id: Int!): Like!
   likes: [Like!]!
   post(id: String!): Post!
   posts: [Post!]!
   user(id: String!): User!
   users: [User!]!
-  whoAmI: User!
 }
 
 input UpdateCommentInput {
