@@ -32,17 +32,26 @@
 $ npm install
 ```
 
+```bash
+$ yarn
+```
+
+## Run Migration
+```bash
+$ yarn migration:run
+```
+
 ## Running the app
 
 ```bash
 # development
-$ npm run start
+$ yarn start
 
 # watch mode
-$ npm run start:dev
+$ yarn start:dev
 
 # production mode
-$ npm run start:prod
+$ yarn start:prod
 ```
 
 ## Test
