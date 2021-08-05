@@ -1,5 +1,7 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { Post } from 'src/posts/entities/post.entity';
+import { ObjectType, Field, registerEnumType } from '@nestjs/graphql';
+import { Comment } from 'comments/entities/comment.entity';
+import { Like } from 'likes/entities/like.entity';
+import { Post } from 'posts/entities/post.entity';
 import {
   BaseEntity,
   Column,
@@ -7,6 +9,12 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+
+export enum UserRole {
+  Admin = 'admin',
+  User = 'user',
+}
+registerEnumType(UserRole, { name: 'UserRole' });
 
 @ObjectType()
 @Entity()
@@ -24,8 +32,12 @@ export class User extends BaseEntity {
   email: string;
 
   @Field()
-  @Column()
-  role: string;
+  @Column({ unique: true })
+  password: string;
+
+  @Field(() => UserRole, { nullable: true })
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.User })
+  role: UserRole;
 
   @Field()
   @Column({ default: true })
@@ -34,4 +46,12 @@ export class User extends BaseEntity {
   @Field(() => [Post], { nullable: true })
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  @Field(() => [Comment], { nullable: true })
+  @OneToMany(() => Comment, (comment) => comment.author)
+  comments: Comment[];
+
+  @Field(() => [Like], { nullable: true })
+  @OneToMany(() => Like, (like) => like.user)
+  likes: Like[];
 }

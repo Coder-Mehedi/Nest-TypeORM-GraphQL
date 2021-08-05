@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { getConnectionOptions } from 'typeorm';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
+import { CommentsModule } from './comments/comments.module';
+import { LikesModule } from './likes/likes.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
@@ -23,8 +24,9 @@ import { PostsModule } from './posts/posts.module';
     }),
     UsersModule,
     PostsModule,
+    CommentsModule,
+    LikesModule,
+    AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

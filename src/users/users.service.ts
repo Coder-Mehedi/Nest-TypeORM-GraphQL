@@ -1,28 +1,38 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
-import { User } from './entities/user.entity';
-
+import { User, UserRole } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
+import { Authorize } from 'auth/user.guard';
 @Injectable()
 export class UsersService {
   async create(createUserInput: CreateUserInput) {
-    const user = User.create({ ...createUserInput });
+    const saltRounds = 10;
+    const hash = await bcrypt.hash(createUserInput.password, saltRounds);
+    const user = User.create({ ...createUserInput, password: hash });
     return await user.save();
   }
 
   async findAll() {
-    return await User.find();
+    try {
+      return await User.find({ relations: ['posts'] });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async findOne(id: string) {
-    return await User.findOne({ id });
+    try {
+      return await User.findOne({ id }, { relations: ['posts'] });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async findOneByEmail(email: string) {
+    try {
+      return await User.findOne({ email }, { relations: ['posts'] });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

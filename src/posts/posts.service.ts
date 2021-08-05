@@ -1,26 +1,89 @@
 import { Injectable } from '@nestjs/common';
+import { User } from 'users/entities/user.entity';
 import { CreatePostInput } from './dto/create-post.input';
 import { UpdatePostInput } from './dto/update-post.input';
+import { Post } from './entities/post.entity';
 
 @Injectable()
 export class PostsService {
-  create(createPostInput: CreatePostInput) {
-    return 'This action adds a new post';
+  async create(reqUser: User, createPostInput: CreatePostInput) {
+    try {
+      const user = await User.findOneOrFail({
+        where: { id: reqUser.id },
+      });
+      const post = Post.create({ ...createPostInput, user });
+      return await post.save();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  findAll() {
-    return `This action returns all posts`;
+  async findAll() {
+    try {
+      return await Post.find({ relations: ['user', 'likes', 'comments'] });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: string) {
+    try {
+      return await Post.findOneOrFail(
+        { id },
+        { relations: ['user', 'likes', 'comments'] },
+      );
+    } catch (error) {
+      throw new Error('Post not found!');
+    }
   }
 
-  update(id: number, updatePostInput: UpdatePostInput) {
-    return `This action updates a #${id} post`;
+  async update(reqUser: User, id: string, updatePostInput: UpdatePostInput) {
+    try {
+      const post = await Post.findOneOrFail(id, {
+        relations: ['user'],
+      });
+      post.content = updatePostInput.content;
+      return post.save();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: string) {
+    try {
+      const post = await Post.findOneOrFail(id);
+      await Post.remove(post);
+      return 'Post Deleted';
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async publish(id: string) {
+    try {
+      const post = await Post.findOneOrFail(id, {
+        relations: ['user'],
+      });
+      if (post.isPublished) throw new Error('Post Was Already Published');
+      post.isPublished = true;
+      await post.save();
+      return 'Post Published';
+    } catch (error) {
+      return error;
+    }
+  }
+  async unpublish(reqUser: User, id: string) {
+    try {
+      const post = await Post.findOneOrFail(id, {
+        relations: ['user'],
+      });
+      if (!post.isPublished) throw new Error('Post not yet published');
+
+      post.isPublished = false;
+      await post.save();
+      return 'Post Unpublished';
+    } catch (error) {
+      return error;
+    }
   }
 }

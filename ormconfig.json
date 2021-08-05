@@ -4,7 +4,12 @@
   "port": 3306,
   "username": "root",
   "password": "password",
-  "database": "nest-typeorm-graphql",
+  "database": "nest-typeorm-graphql-prod",
   "entities": ["dist/**/*.entity{.ts,.js}"],
-  "synchronize": true
+  "synchronize": false,
+  "migrations": ["dist/migration/*{.ts,.js}"],
+  "cli": {
+    "entitiesDir": "src/entities",
+    "migrationsDir": "src/migration"
+  }
 }

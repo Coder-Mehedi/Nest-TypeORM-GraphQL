@@ -2,57 +2,101 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AccessToken {
+  access_token: String!
+}
+
+type Comment {
+  author: User!
+  content: String!
+  id: String!
+  post: Post!
+}
+
+input CreateCommentInput {
+  content: String!
+  postId: String!
+}
+
 input CreatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  content: String!
 }
 
 input CreateUserInput {
   email: String!
   name: String!
-  role: String!
+  password: String!
+  role: UserRole
+}
+
+type Like {
+  id: String
+  post: Post
+  user: User
+}
+
+input LoginInput {
+  email: String!
+  password: String!
 }
 
 type Mutation {
+  createComment(createCommentInput: CreateCommentInput!): Comment!
   createPost(createPostInput: CreatePostInput!): Post!
-  createUser(createUserInput: CreateUserInput!): User!
-  removePost(id: Int!): Post!
-  removeUser(id: Int!): User!
-  updatePost(updatePostInput: UpdatePostInput!): Post!
-  updateUser(updateUserInput: UpdateUserInput!): User!
+  likeAPost(postId: String!): Like!
+  login(loginInput: LoginInput!): AccessToken!
+  publishPost(id: String!): String!
+  registerUser(createUserInput: CreateUserInput!): User!
+  removeComment(id: String!): String!
+  removeLike(id: String!): String!
+  removePost(id: String!): String!
+  unpublishPost(id: String!): String!
+  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
+  updatePost(id: String!, updatePostInput: UpdatePostInput!): Post!
 }
 
 type Post {
+  comments: [Comment!]
   content: String!
   id: String!
   isPublished: Boolean!
+  likes: [Like!]
+  user: User!
 }
 
 type Query {
-  post(id: Int!): Post!
+  comments(postId: String!): [Comment!]!
+  currentUser: User!
+  likes: [Like!]!
+  post(id: String!): Post!
   posts: [Post!]!
   user(id: String!): User!
   users: [User!]!
 }
 
-input UpdatePostInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+input UpdateCommentInput {
+  content: String!
+  id: String!
+  postId: String
 }
 
-input UpdateUserInput {
-  email: String
-  id: Int!
-  name: String
-  role: String
+input UpdatePostInput {
+  content: String!
 }
 
 type User {
+  comments: [Comment!]
   email: String!
   id: String!
   isActive: Boolean!
+  likes: [Like!]
   name: String!
+  password: String!
   posts: [Post!]
-  role: String!
+  role: UserRole
+}
+
+enum UserRole {
+  Admin
+  User
 }
