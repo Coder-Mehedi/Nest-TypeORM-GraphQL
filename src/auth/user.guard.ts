@@ -44,7 +44,6 @@ export class IsCreatorGuard implements CanActivate {
     if (post.user.id === user.id) return true;
 
     if (!this.disallowAdmin && user.role === UserRole.Admin) return true;
-    console.log(post.user.id, user.id);
     return false;
   }
 }

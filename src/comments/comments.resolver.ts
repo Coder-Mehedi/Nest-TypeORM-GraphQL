@@ -20,20 +20,24 @@ export class CommentsResolver {
     return this.commentsService.create(reqUser, createCommentInput);
   }
 
+  @Authorize()
   @Query(() => [Comment], { name: 'comments' })
   findAll(@Args('postId') postId: string) {
     return this.commentsService.findAll(postId);
   }
 
+  @Authorize()
   @Mutation(() => Comment)
   updateComment(
     @Args('updateCommentInput') updateCommentInput: UpdateCommentInput,
+    @CurrentUser() reqUser: User,
   ) {
-    return this.commentsService.update(updateCommentInput);
+    return this.commentsService.update(reqUser, updateCommentInput);
   }
 
+  @Authorize()
   @Mutation(() => String)
-  removeComment(@Args('id') id: string) {
-    return this.commentsService.remove(id);
+  removeComment(@Args('id') id: string, @CurrentUser() reqUser: User) {
+    return this.commentsService.remove(reqUser, id);
   }
 }

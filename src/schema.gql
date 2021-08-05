@@ -48,12 +48,11 @@ type Mutation {
   publishPost(id: String!): String!
   registerUser(createUserInput: CreateUserInput!): User!
   removeComment(id: String!): String!
+  removeLike(id: String!): String!
   removePost(id: String!): String!
-  removeUser(id: Int!): User!
   unpublishPost(id: String!): String!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   updatePost(id: String!, updatePostInput: UpdatePostInput!): Post!
-  updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
 type Post {
@@ -83,14 +82,6 @@ input UpdateCommentInput {
 
 input UpdatePostInput {
   content: String!
-}
-
-input UpdateUserInput {
-  email: String
-  id: Int!
-  name: String
-  password: String
-  role: UserRole
 }
 
 type User {

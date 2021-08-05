@@ -53,5 +53,5 @@ export class User extends BaseEntity {
 
   @Field(() => [Like], { nullable: true })
   @OneToMany(() => Like, (like) => like.user)
-  likes: Comment[];
+  likes: Like[];
 }

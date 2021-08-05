@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Post } from 'posts/entities/post.entity';
 import { User } from 'users/entities/user.entity';
 import { CreateCommentInput } from './dto/create-comment.input';
@@ -22,31 +22,46 @@ export class CommentsService {
 
   async findAll(postId: string) {
     try {
-      return await Comment.find({ where: { post: postId } });
+      return await Comment.find({
+        where: { post: postId },
+        relations: ['author', 'post', 'post.user'],
+      });
     } catch (error) {
       console.log(error);
     }
   }
 
-  async update(updateCommentInput: UpdateCommentInput) {
+  async update(reqUser: User, updateCommentInput: UpdateCommentInput) {
     try {
       const comment = await Comment.findOneOrFail(updateCommentInput.id, {
         relations: ['author'],
       });
+      if (!(comment.author.id === reqUser.id))
+        throw new Error('You are not allowed to do this action');
       comment.content = updateCommentInput.content;
       return await comment.save();
     } catch (error) {
-      console.log(error);
+      return error;
     }
   }
 
-  async remove(id: string) {
+  async remove(reqUser: User, id: string) {
     try {
-      const comment = await Comment.findOneOrFail(id);
-      await Comment.remove(comment);
-      return 'Comment Removed';
+      const comment = await Comment.findOneOrFail(id, {
+        relations: ['post', 'post.user', 'author'],
+      });
+      if (!comment) throw new Error('Comment Not Found');
+      console.log(comment.post.user.id, reqUser.id, comment.author.id);
+      if (
+        comment.post.user.id === reqUser.id ||
+        comment.author.id === reqUser.id
+      ) {
+        await Comment.remove(comment);
+        return 'Comment Removed';
+      }
+      throw new Error('You are not allowed to do this action');
     } catch (error) {
-      throw new Error('Comment Not Found');
+      return error;
     }
   }
 }

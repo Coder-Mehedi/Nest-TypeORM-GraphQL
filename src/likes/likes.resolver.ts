@@ -15,8 +15,15 @@ export class LikesResolver {
     return this.likesService.likeAPost(reqUser, postId);
   }
 
+  @Authorize()
   @Query(() => [Like], { name: 'likes' })
   findAll() {
     return this.likesService.findAll();
+  }
+
+  @Authorize()
+  @Mutation(() => String)
+  removeLike(@Args('id') id: string, @CurrentUser() reqUser: User) {
+    return this.likesService.remove(reqUser, id);
   }
 }

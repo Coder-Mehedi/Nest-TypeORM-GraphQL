@@ -28,12 +28,12 @@ export class PostsService {
 
   async findOne(id: string) {
     try {
-      return await Post.findOne(
+      return await Post.findOneOrFail(
         { id },
         { relations: ['user', 'likes', 'comments'] },
       );
     } catch (error) {
-      console.log(error);
+      throw new Error('Post not found!');
     }
   }
 

@@ -23,9 +23,25 @@ export class LikesService {
 
   async findAll() {
     try {
-      return await Like.find({ relations: ['user'] });
+      return await Like.find({ relations: ['user', 'post', 'post.user'] });
     } catch (error) {
       console.log(error);
+    }
+  }
+  async remove(reqUser: User, id: string) {
+    try {
+      const like = await Like.findOneOrFail(id, {
+        relations: ['post', 'post.user', 'user'],
+      });
+      if (!like) throw new Error('Not Liked');
+      console.log(like.post.user.id, reqUser.id, like.user.id);
+      if (like.post.user.id === reqUser.id || like.user.id === reqUser.id) {
+        await Like.remove(like);
+        return 'Like Removed';
+      }
+      throw new Error('You are not allowed to do this action');
+    } catch (error) {
+      return error;
     }
   }
 }

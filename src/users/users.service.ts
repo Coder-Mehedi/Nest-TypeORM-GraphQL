@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { Authorize } from 'auth/user.guard';
 @Injectable()
 export class UsersService {
   async create(createUserInput: CreateUserInput) {
@@ -34,13 +34,5 @@ export class UsersService {
     } catch (error) {
       console.log(error);
     }
-  }
-
-  update(id: number, updateUserInput: UpdateUserInput) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
   }
 }

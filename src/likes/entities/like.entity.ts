@@ -11,10 +11,10 @@ export class Like extends BaseEntity {
   id: string;
 
   @Field(() => User, { nullable: true })
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { onDelete: 'CASCADE' })
   user: User;
 
   @Field(() => Post, { nullable: true })
-  @ManyToOne(() => Post)
+  @ManyToOne(() => Post, { onDelete: 'CASCADE' })
   post: Post;
 }
