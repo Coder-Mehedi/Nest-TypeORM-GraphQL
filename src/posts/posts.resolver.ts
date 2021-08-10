@@ -20,7 +20,7 @@ export class PostsResolver {
     return this.postsService.create(reqUser, createPostInput);
   }
 
-  @Authorize()
+  // @Authorize()
   @Query(() => [Post], { name: 'posts' })
   findAll() {
     return this.postsService.findAll();

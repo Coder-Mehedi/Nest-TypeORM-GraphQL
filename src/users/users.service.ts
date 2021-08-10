@@ -1,15 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
-import { User, UserRole } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
-import { Authorize } from 'auth/user.guard';
 @Injectable()
 export class UsersService {
   async create(createUserInput: CreateUserInput) {
-    const saltRounds = 10;
-    const hash = await bcrypt.hash(createUserInput.password, saltRounds);
-    const user = User.create({ ...createUserInput, password: hash });
-    return await user.save();
+    const { name, email, password } = createUserInput;
+    try {
+      if (!name) throw new Error('Name is Required');
+      if (!email) throw new Error('Email is Required');
+      if (!password) throw new Error('Password is Required');
+
+      const foundUser = await User.findOne({ email });
+      if (foundUser) throw new Error('Account Already Exist!');
+
+      const saltRounds = 10;
+      const hash = await bcrypt.hash(password, saltRounds);
+      const user = User.create({ ...createUserInput, password: hash });
+      return await user.save();
+    } catch (error) {
+      return error;
+    }
   }
 
   async findAll() {

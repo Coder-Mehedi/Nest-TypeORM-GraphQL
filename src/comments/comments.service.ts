@@ -51,7 +51,6 @@ export class CommentsService {
         relations: ['post', 'post.user', 'author'],
       });
       if (!comment) throw new Error('Comment Not Found');
-      console.log(comment.post.user.id, reqUser.id, comment.author.id);
       if (
         comment.post.user.id === reqUser.id ||
         comment.author.id === reqUser.id

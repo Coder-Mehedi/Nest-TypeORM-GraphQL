@@ -7,15 +7,24 @@ import { Like } from './entities/like.entity';
 export class LikesService {
   async likeAPost(reqUser: User, postId: string) {
     try {
-      const post = await Post.findOneOrFail(postId);
+      let post = await Post.findOneOrFail(postId);
       if (!post.isPublished) throw new Error('Post not published');
+
       const user = await User.findOneOrFail(reqUser.id);
       const isFound = await Like.findOne({ where: { post, user } });
 
-      if (isFound) return await Like.remove(isFound);
+      if (isFound) {
+        await Like.remove(isFound);
+        return await Post.findOneOrFail(postId, {
+          relations: ['user', 'likes', 'likes.user', 'comments'],
+        });
+      }
 
       const like = Like.create({ post, user });
-      return await like.save();
+      await like.save();
+      return await Post.findOneOrFail(postId, {
+        relations: ['user', 'likes', 'likes.user', 'comments'],
+      });
     } catch (error) {
       return error;
     }
@@ -34,7 +43,6 @@ export class LikesService {
         relations: ['post', 'post.user', 'user'],
       });
       if (!like) throw new Error('Not Liked');
-      console.log(like.post.user.id, reqUser.id, like.user.id);
       if (like.post.user.id === reqUser.id || like.user.id === reqUser.id) {
         await Like.remove(like);
         return 'Like Removed';

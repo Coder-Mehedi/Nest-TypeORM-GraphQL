@@ -34,7 +34,6 @@ export class IsCreatorGuard implements CanActivate {
     disallowAdmin = this.disallowAdmin;
   }
   async canActivate(context: ExecutionContext) {
-    console.log('disallowAdmin', this.disallowAdmin);
     const ctx = GqlExecutionContext.create(context);
     const email = ctx.getContext().req.user.email;
     const user = await User.findOne({ email });

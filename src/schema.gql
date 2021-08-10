@@ -43,7 +43,7 @@ input LoginInput {
 type Mutation {
   createComment(createCommentInput: CreateCommentInput!): Comment!
   createPost(createPostInput: CreatePostInput!): Post!
-  likeAPost(postId: String!): Like!
+  likeAPost(postId: String!): Post!
   login(loginInput: LoginInput!): AccessToken!
   publishPost(id: String!): String!
   registerUser(createUserInput: CreateUserInput!): User!

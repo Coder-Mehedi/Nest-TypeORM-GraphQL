@@ -4,13 +4,14 @@ import { Like } from './entities/like.entity';
 import { CurrentUser } from 'shared/current-user.decorator';
 import { User } from 'users/entities/user.entity';
 import { Authorize } from 'auth/user.guard';
+import { Post } from 'posts/entities/post.entity';
 
 @Resolver(() => Like)
 export class LikesResolver {
   constructor(private readonly likesService: LikesService) {}
 
   @Authorize()
-  @Mutation(() => Like)
+  @Mutation(() => Post)
   likeAPost(@Args('postId') postId: string, @CurrentUser() reqUser: User) {
     return this.likesService.likeAPost(reqUser, postId);
   }
