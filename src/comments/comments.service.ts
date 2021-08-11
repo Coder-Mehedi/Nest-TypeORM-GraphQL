@@ -14,7 +14,10 @@ export class CommentsService {
       if (!post.isPublished) throw new Error('Post not published');
       const author = await User.findOneOrFail(reqUser.id);
       const comment = Comment.create({ content, post, author });
-      return await comment.save();
+      await comment.save();
+      return await Post.findOneOrFail(postId, {
+        relations: ['user', 'likes', 'likes.user', 'comments'],
+      });
     } catch (error) {
       return error;
     }
@@ -50,13 +53,16 @@ export class CommentsService {
       const comment = await Comment.findOneOrFail(id, {
         relations: ['post', 'post.user', 'author'],
       });
+
       if (!comment) throw new Error('Comment Not Found');
       if (
         comment.post.user.id === reqUser.id ||
         comment.author.id === reqUser.id
       ) {
         await Comment.remove(comment);
-        return 'Comment Removed';
+        return await Post.findOneOrFail(comment.post.id, {
+          relations: ['user', 'likes', 'likes.user', 'comments'],
+        });
       }
       throw new Error('You are not allowed to do this action');
     } catch (error) {

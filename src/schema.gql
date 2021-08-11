@@ -41,13 +41,13 @@ input LoginInput {
 }
 
 type Mutation {
-  createComment(createCommentInput: CreateCommentInput!): Comment!
+  createComment(createCommentInput: CreateCommentInput!): Post!
   createPost(createPostInput: CreatePostInput!): Post!
   likeAPost(postId: String!): Post!
   login(loginInput: LoginInput!): AccessToken!
   publishPost(id: String!): String!
   registerUser(createUserInput: CreateUserInput!): User!
-  removeComment(id: String!): String!
+  removeComment(id: String!): Post!
   removeLike(id: String!): String!
   removePost(id: String!): String!
   unpublishPost(id: String!): String!

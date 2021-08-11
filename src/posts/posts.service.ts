@@ -32,7 +32,7 @@ export class PostsService {
     try {
       return await Post.findOneOrFail(
         { id },
-        { relations: ['user', 'likes', 'comments'] },
+        { relations: ['user', 'likes', 'comments', 'comments.author'] },
       );
     } catch (error) {
       throw new Error('Post not found!');

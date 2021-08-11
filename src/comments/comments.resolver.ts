@@ -6,13 +6,14 @@ import { UpdateCommentInput } from './dto/update-comment.input';
 import { CurrentUser } from 'shared/current-user.decorator';
 import { User } from 'users/entities/user.entity';
 import { Authorize } from 'auth/user.guard';
+import { Post } from 'posts/entities/post.entity';
 
 @Resolver(() => Comment)
 export class CommentsResolver {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Authorize()
-  @Mutation(() => Comment)
+  @Mutation(() => Post)
   createComment(
     @Args('createCommentInput') createCommentInput: CreateCommentInput,
     @CurrentUser() reqUser: User,
@@ -36,7 +37,7 @@ export class CommentsResolver {
   }
 
   @Authorize()
-  @Mutation(() => String)
+  @Mutation(() => Post)
   removeComment(@Args('id') id: string, @CurrentUser() reqUser: User) {
     return this.commentsService.remove(reqUser, id);
   }

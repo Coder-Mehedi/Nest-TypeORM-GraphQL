@@ -26,7 +26,7 @@ export class PostsResolver {
     return this.postsService.findAll();
   }
 
-  @Authorize()
+  // @Authorize()
   @Query(() => Post, { name: 'post' })
   findOne(@Args('id') id: string) {
     return this.postsService.findOne(id);
