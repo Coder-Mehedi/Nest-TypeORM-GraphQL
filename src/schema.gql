@@ -48,7 +48,7 @@ type Mutation {
   publishPost(id: String!): String!
   registerUser(createUserInput: CreateUserInput!): User!
   removeComment(id: String!): Post!
-  removeLike(id: String!): String!
+  removeLike(id: String!): Post!
   removePost(id: String!): String!
   unpublishPost(id: String!): String!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!

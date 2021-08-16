@@ -45,7 +45,9 @@ export class LikesService {
       if (!like) throw new Error('Not Liked');
       if (like.post.user.id === reqUser.id || like.user.id === reqUser.id) {
         await Like.remove(like);
-        return 'Like Removed';
+        return await Post.findOneOrFail(like.post.id, {
+          relations: ['user', 'likes', 'likes.user', 'comments'],
+        });
       }
       throw new Error('You are not allowed to do this action');
     } catch (error) {

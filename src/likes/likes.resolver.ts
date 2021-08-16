@@ -23,7 +23,7 @@ export class LikesResolver {
   }
 
   @Authorize()
-  @Mutation(() => String)
+  @Mutation(() => Post)
   removeLike(@Args('id') id: string, @CurrentUser() reqUser: User) {
     return this.likesService.remove(reqUser, id);
   }
