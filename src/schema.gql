@@ -51,7 +51,7 @@ type Mutation {
   removeLike(id: String!): Post!
   removePost(id: String!): String!
   unpublishPost(id: String!): String!
-  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
+  updateComment(updateCommentInput: UpdateCommentInput!): Post!
   updatePost(id: String!, updatePostInput: UpdatePostInput!): Post!
 }
 

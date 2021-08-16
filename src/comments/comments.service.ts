@@ -37,12 +37,21 @@ export class CommentsService {
   async update(reqUser: User, updateCommentInput: UpdateCommentInput) {
     try {
       const comment = await Comment.findOneOrFail(updateCommentInput.id, {
-        relations: ['author'],
+        relations: ['author', 'post'],
       });
       if (!(comment.author.id === reqUser.id))
         throw new Error('You are not allowed to do this action');
       comment.content = updateCommentInput.content;
-      return await comment.save();
+      await comment.save();
+      return await Post.findOneOrFail(comment.post.id, {
+        relations: [
+          'user',
+          'likes',
+          'likes.user',
+          'comments',
+          'comments.author',
+        ],
+      });
     } catch (error) {
       return error;
     }

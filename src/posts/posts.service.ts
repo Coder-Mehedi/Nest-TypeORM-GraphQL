@@ -50,10 +50,16 @@ export class PostsService {
   async update(reqUser: User, id: string, updatePostInput: UpdatePostInput) {
     try {
       const post = await Post.findOneOrFail(id, {
-        relations: ['user'],
+        relations: [
+          'user',
+          'likes',
+          'likes.user',
+          'comments',
+          'comments.author',
+        ],
       });
       post.content = updatePostInput.content;
-      return post.save();
+      return await post.save();
     } catch (error) {
       console.log(error);
     }

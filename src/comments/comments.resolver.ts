@@ -28,7 +28,7 @@ export class CommentsResolver {
   }
 
   @Authorize()
-  @Mutation(() => Comment)
+  @Mutation(() => Post)
   updateComment(
     @Args('updateCommentInput') updateCommentInput: UpdateCommentInput,
     @CurrentUser() reqUser: User,
