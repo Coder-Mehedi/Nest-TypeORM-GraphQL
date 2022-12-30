@@ -21,7 +21,7 @@ export class RolesGuard implements CanActivate {
 
     const ctx = GqlExecutionContext.create(context);
     const email = ctx.getContext().req.user.email;
-    const user = await User.findOne({ email });
+    const user = await User.findOneBy({ email });
 
     if (!roles.includes(user.role)) return false;
     return true;
@@ -36,10 +36,13 @@ export class IsCreatorGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const ctx = GqlExecutionContext.create(context);
     const email = ctx.getContext().req.user.email;
-    const user = await User.findOne({ email });
+    const user = await User.findOneBy({ email });
 
     const [req, res] = context.getArgs();
-    const post = await Post.findOneOrFail(res.id, { relations: ['user'] });
+    const post = await Post.findOneOrFail({
+      where: { id: req.id },
+      relations: ['user'],
+    });
     if (post.user.id === user.id) return true;
 
     if (!this.disallowAdmin && user.role === UserRole.Admin) return true;

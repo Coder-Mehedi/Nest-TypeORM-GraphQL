@@ -10,12 +10,13 @@ export class CommentsService {
   async create(reqUser: User, createCommentInput: CreateCommentInput) {
     const { content, postId } = createCommentInput;
     try {
-      const post = await Post.findOneOrFail(postId);
+      const post = await Post.findOneOrFail({ where: { id: postId } });
       if (!post.isPublished) throw new Error('Post not published');
-      const author = await User.findOneOrFail(reqUser.id);
+      const author = await User.findOneOrFail({ where: { id: reqUser.id } });
       const comment = Comment.create({ content, post, author });
       await comment.save();
-      return await Post.findOneOrFail(postId, {
+      return await Post.findOneOrFail({
+        where: { id: postId },
         relations: ['user', 'likes', 'likes.user', 'comments'],
       });
     } catch (error) {
@@ -26,7 +27,7 @@ export class CommentsService {
   async findAll(postId: string) {
     try {
       return await Comment.find({
-        where: { post: postId },
+        where: { id: postId },
         relations: ['author', 'post', 'post.user'],
       });
     } catch (error) {
@@ -36,14 +37,17 @@ export class CommentsService {
 
   async update(reqUser: User, updateCommentInput: UpdateCommentInput) {
     try {
-      const comment = await Comment.findOneOrFail(updateCommentInput.id, {
+      const comment = await Comment.findOneOrFail({
+        where: { id: updateCommentInput.id },
         relations: ['author', 'post'],
       });
+
       if (!(comment.author.id === reqUser.id))
         throw new Error('You are not allowed to do this action');
       comment.content = updateCommentInput.content;
       await comment.save();
-      return await Post.findOneOrFail(comment.post.id, {
+      return await Post.findOneOrFail({
+        where: { id: comment.post.id },
         relations: [
           'user',
           'likes',
@@ -59,7 +63,8 @@ export class CommentsService {
 
   async remove(reqUser: User, id: string) {
     try {
-      const comment = await Comment.findOneOrFail(id, {
+      const comment = await Comment.findOneOrFail({
+        where: { id },
         relations: ['post', 'post.user', 'author'],
       });
 
@@ -69,7 +74,8 @@ export class CommentsService {
         comment.author.id === reqUser.id
       ) {
         await Comment.remove(comment);
-        return await Post.findOneOrFail(comment.post.id, {
+        return await Post.findOneOrFail({
+          where: { id: comment.post.id },
           relations: ['user', 'likes', 'likes.user', 'comments'],
         });
       }

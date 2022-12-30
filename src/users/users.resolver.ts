@@ -22,8 +22,8 @@ export class UsersResolver {
 
   @Authorize()
   @Query(() => User, { name: 'user' })
-  findOne(@Args('id') id: string) {
-    return this.usersService.findOne(id);
+  findOneBy(@Args('id') id: string) {
+    return this.usersService.findOneBy(id);
   }
 
   @Authorize()

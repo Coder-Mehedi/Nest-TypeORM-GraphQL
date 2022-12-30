@@ -11,7 +11,7 @@ export class UsersService {
       if (!email) throw new Error('Email is Required');
       if (!password) throw new Error('Password is Required');
 
-      const foundUser = await User.findOne({ email });
+      const foundUser = await User.findOneBy({ email });
       if (foundUser) throw new Error('Account Already Exist!');
 
       const saltRounds = 10;
@@ -31,17 +31,20 @@ export class UsersService {
     }
   }
 
-  async findOne(id: string) {
+  async findOneBy(id: string) {
     try {
-      return await User.findOne({ id }, { relations: ['posts'] });
+      return await User.findOne({
+        where: { id },
+        relations: ['posts'],
+      });
     } catch (error) {
       console.log(error);
     }
   }
 
-  async findOneByEmail(email: string) {
+  async findOneByByEmail(email: string) {
     try {
-      return await User.findOne({ email }, { relations: ['posts'] });
+      return await User.findOne({ where: { email }, relations: ['posts'] });
     } catch (error) {
       console.log(error);
     }

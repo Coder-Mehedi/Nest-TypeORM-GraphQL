@@ -11,6 +11,6 @@ export const CurrentUser = createParamDecorator(
     const ctx = GqlExecutionContext.create(context);
     const user = ctx.getContext().req.user;
     if (!user) throw new UnauthorizedException();
-    return await User.findOne({ email: user.email });
+    return await User.findOneBy({ email: user.email });
   },
 );

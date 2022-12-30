@@ -28,8 +28,8 @@ export class PostsResolver {
 
   // @Authorize()
   @Query(() => Post, { name: 'post' })
-  findOne(@Args('id') id: string) {
-    return this.postsService.findOne(id);
+  findOneBy(@Args('id') id: string) {
+    return this.postsService.findOneBy(id);
   }
 
   @IsCreator({ disallowAdmin: true })

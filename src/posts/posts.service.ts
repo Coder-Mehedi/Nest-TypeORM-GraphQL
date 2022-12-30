@@ -28,20 +28,18 @@ export class PostsService {
     }
   }
 
-  async findOne(id: string) {
+  async findOneBy(id: string) {
     try {
-      return await Post.findOneOrFail(
-        { id },
-        {
-          relations: [
-            'user',
-            'likes',
-            'likes.user',
-            'comments',
-            'comments.author',
-          ],
-        },
-      );
+      return await Post.findOneOrFail({
+        where: { id },
+        relations: [
+          'user',
+          'likes',
+          'likes.user',
+          'comments',
+          'comments.author',
+        ],
+      });
     } catch (error) {
       throw new Error('Post not found!');
     }
@@ -49,7 +47,8 @@ export class PostsService {
 
   async update(reqUser: User, id: string, updatePostInput: UpdatePostInput) {
     try {
-      const post = await Post.findOneOrFail(id, {
+      const post = await Post.findOneOrFail({
+        where: { id },
         relations: [
           'user',
           'likes',
@@ -67,7 +66,7 @@ export class PostsService {
 
   async remove(id: string) {
     try {
-      const post = await Post.findOneOrFail(id);
+      const post = await Post.findOneOrFail({ where: { id } });
       await Post.remove(post);
       return 'Post Deleted';
     } catch (error) {
@@ -77,7 +76,8 @@ export class PostsService {
 
   async publish(id: string) {
     try {
-      const post = await Post.findOneOrFail(id, {
+      const post = await Post.findOneOrFail({
+        where: { id },
         relations: ['user'],
       });
       if (post.isPublished) throw new Error('Post Was Already Published');
@@ -90,7 +90,8 @@ export class PostsService {
   }
   async unpublish(reqUser: User, id: string) {
     try {
-      const post = await Post.findOneOrFail(id, {
+      const post = await Post.findOneOrFail({
+        where: { id },
         relations: ['user'],
       });
       if (!post.isPublished) throw new Error('Post not yet published');
